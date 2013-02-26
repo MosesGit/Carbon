@@ -34,9 +34,9 @@ public class Store
 	
 	public Store(int w, int h)
 	{
-		background = new ImageIcon("assets/Store Menu.png").getImage();
-		blank = new ImageIcon("assets/Button.png");
-		blank2 = new ImageIcon("assets/Button 2.png");
+		background = new ImageIcon("assets/graphics/Store Menu.png").getImage();
+		blank = new ImageIcon("assets/graphics/Button.png");
+		blank2 = new ImageIcon("assets/graphics/Button 2.png");
 		
 		storepanel = new StorePanel(background);
 		storepanel.setLayout(null);

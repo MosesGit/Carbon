@@ -17,7 +17,7 @@ public class Weapon
 		this.y = y;
 		offsetX = 30;
 		offsetY = 2;
-		wep = new ImageIcon("assets/Pistol.png").getImage();
+		wep = new ImageIcon("assets/graphics/Pistol.png").getImage();
 		width = wep.getWidth(null);
 		height = wep.getHeight(null);
 		ammo = a;

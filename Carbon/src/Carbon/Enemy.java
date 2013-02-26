@@ -12,7 +12,7 @@ public class Enemy
 	
 	public Enemy()
 	{
-		still = new ImageIcon("assets/Enemy.png").getImage();
+		still = new ImageIcon("assets/graphics/Enemy.png").getImage();
 		width = still.getWidth(null);
 		height = still.getHeight(null);
 		x = 1000;

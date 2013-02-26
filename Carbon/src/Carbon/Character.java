@@ -6,19 +6,18 @@ import javax.swing.*;
  
 public class Character
 {
-	private int width, height, x, y, wx, wy, mx, my, health, maxHealth, score, space, r;
+	private int width, height, x, y, wx, wy, mx, my, health, maxHealth, score, space, r, money;
 	private double xDifference, yDifference, angle;
 	private Rectangle rect;
 	private Weapon weap;
-	private Color col;
 	private Image still, bg;
 	private String name, weapon;
 	private boolean fired, reload;
 		
 	public Character()
 	{
-		still = new ImageIcon("assets/Character.png").getImage();
-		bg = new ImageIcon("assets/Background.png").getImage();
+		still = new ImageIcon("assets/graphics/Character.png").getImage();
+		bg = new ImageIcon("assets/graphics/Background.png").getImage();
 		width = still.getWidth(null);
 		height = still.getHeight(null);
 		x = 100 - width;
@@ -32,11 +31,11 @@ public class Character
 		score = 0;
 		space = 0;
 		r = 0;
+		money = 1000;
 		xDifference = 0;
 		yDifference = 0;
 		angle = 0;
 		rect = new Rectangle(x, y, 40, height);
-		col = Color.BLACK;
 		fired = false;
 		reload = false;
 		weap = new Weapon(x + 100, y + 40, 100, 10, 100);
@@ -139,6 +138,10 @@ public class Character
 	{
 		return r;
 	}
+	public int getMoney()
+	{
+		return money;
+	}
 	public String getName()
 	{
 		return name;
@@ -168,6 +171,10 @@ public class Character
 	public void setMY(int n)
 	{
 		my = n;
+	}
+	public void setMoney(int m)
+	{
+		money = m;
 	}
 	public void setName(String s)
 	{

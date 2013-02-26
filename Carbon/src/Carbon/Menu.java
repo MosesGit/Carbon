@@ -30,16 +30,16 @@ public class Menu extends JFrame
 	
 	public Menu(int w, int h)
 	{
-		background = new ImageIcon("assets/Main Menu.png").getImage();
-		newgame = new ImageIcon("assets/New Game.png");
-		continuegame = new ImageIcon("assets/Continue Game.png");
-		options = new ImageIcon("assets/Options.png");
-		exitgame = new ImageIcon("assets/Exit Game.png");
+		background = new ImageIcon("assets/graphics/Main Menu.png").getImage();
+		newgame = new ImageIcon("assets/graphics/New Game.png");
+		continuegame = new ImageIcon("assets/graphics/Continue Game.png");
+		options = new ImageIcon("assets/graphics/Options.png");
+		exitgame = new ImageIcon("assets/graphics/Exit Game.png");
 		
-		newgame2 = new ImageIcon("assets/New Game 2.png");
-		continuegame2 = new ImageIcon("assets/Continue Game 2.png");
-		options2 = new ImageIcon("assets/Options 2.png");
-		exitgame2 = new ImageIcon("assets/Exit Game 2.png");
+		newgame2 = new ImageIcon("assets/graphics/New Game 2.png");
+		continuegame2 = new ImageIcon("assets/graphics/Continue Game 2.png");
+		options2 = new ImageIcon("assets/graphics/Options 2.png");
+		exitgame2 = new ImageIcon("assets/graphics/Exit Game 2.png");
 		
 		myPanel = new MenuPanel(background);
 		myPanel.setLayout(null);

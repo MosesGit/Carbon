@@ -15,8 +15,11 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 	Graphics bg;
 	static ArrayList<Integer> keys;
 	static ArrayList<Bullet> bullets;
+	static ArrayList<Obstacle> obstacles;
 	static ArrayList<Enemy> enemies;
 	boolean redraw = true;
+	static int xx, yy, ll, k, ri, li;
+	Obstacle ob1, ob2, ob3, ob4, ob5, ob6, ob7;
 	
 	public Panel()
 	{
@@ -29,7 +32,29 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		addMouseMotionListener(this);
 		keys = new ArrayList<Integer>();
 		bullets = new ArrayList<Bullet>();
+		obstacles = new ArrayList<Obstacle>();
 		enemies = new ArrayList<Enemy>();
+		xx = 0;
+		yy = 0;
+		ll = 30;
+		k = c.getBWidth();
+		ri = 0;
+		li = 0;
+		
+		ob1 = new Obstacle(100, 100);
+		ob2 = new Obstacle(100, c.getY() - ob1.getHeight());
+		ob3 = new Obstacle(100, c.getY() + c.getHeight());
+		ob4 = new Obstacle(200, c.getY() - ob3.getHeight());
+		ob5 = new Obstacle(200, c.getY() + c.getHeight());
+		ob6 = new Obstacle(400, c.getY() - ob5.getHeight());
+		ob7 = new Obstacle(400, c.getY() + c.getHeight());
+		obstacles.add(ob1);
+		obstacles.add(ob2);
+		obstacles.add(ob3);
+		obstacles.add(ob4);
+		obstacles.add(ob5);
+		obstacles.add(ob6);
+		obstacles.add(ob7);
 	}
 	
 	public void paint(Graphics g)
@@ -39,21 +64,30 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		if (bg == null)
 		{
 			while (bi == null)
-				bi = createImage(Menu.frame.getWidth(), Menu.frame.getHeight());
+				bi = createImage(k, Menu.frame.getHeight());
 			while (bg == null)
 				bg = bi.getGraphics();
 		}
 		draw(bg);
-		paintShot(bg);
+		paintBullet(bg);
+		paintObstacle(bg);
+		g.drawImage(bi, xx, yy, this);
 		
 		g.drawImage(bi, 0, 0, this);
 		repaint();
 	}
 	
-	public void paintShot(Graphics g)
+	public void paintBullet(Graphics g)
 	{
 			for(Bullet b:bullets)
 				b.draw(g);
+			update();
+	}
+	
+	public void paintObstacle(Graphics g)
+	{
+			for(Obstacle o:obstacles)
+				o.draw(g);
 			update();
 	}
 	
@@ -65,7 +99,7 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		if(redraw)
 		{
 			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, Menu.frame.getWidth(), Menu.frame.getHeight());
+			g.fillRect(0, 0, k, Menu.frame.getHeight());
 			redraw = false;
 		}
 		
@@ -74,12 +108,13 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		e.draw(g);
 		
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("FFF Galaxy", Font.PLAIN, 12));
-		g.drawString("Name: " + c.getName(), 50, 600);
-		g.drawString("HP: " + c.getHealth(), 50, 625);
-		g.drawString("Ammo: " + c.getWeapon().getAmmo(), 50, 650);
-		g.drawString("Score: " + c.getScore(), 50, 675);
+		g.setFont(new Font("FFF Galaxy", Font.PLAIN, 20));
+		g.drawString("Name: " + c.getName(), 50, 580);
+		g.drawString("HP: " + c.getHealth(), 50, 610);
+		g.drawString("Ammo: " + c.getWeapon().getAmmo(), 50, 640);
+		g.drawString("Score: " + c.getScore(), 50, 670);
 		g.drawString("Location: " + c.getMX() + " " + c.getMY(), 50, 700);
+		g.drawString("Money: "+ c.getMoney(), 50, 730);
 		
 		g.setColor(Color.WHITE);
 		g.fillRect(c.getX() + 41, c.getY() - 25, c.getMaxHealth() / 2, 5);
@@ -96,9 +131,35 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		catch(Exception e){}
 		
 		if (keys.contains(KeyEvent.VK_D))
-			c.moveRight();
+		{
+			for(Obstacle ob:obstacles)
+			{
+				if((c.getY() + c.getHeight() > ob.getY()) && (c.getY() < ob.getY() + ob.getHeight()) && (c.getX() + 7 + c.getWidth() > ob.getX()) && (c.getX() + 7 + c.getWidth() < ob.getX() + ob.getWidth()))
+					ri = -1;
+			}
+			if( ri>0)
+			{
+				c.moveRight();
+				if((xx * -1) < k - Menu.frame.getWidth() && Menu.frame.getWidth() * .5 - xx < c.getX())
+					xx = xx - 7;
+			}
+			ri = 1;
+		}
 		if (keys.contains(KeyEvent.VK_A))
-			c.moveLeft();
+		{
+			for(Obstacle ob:obstacles)
+			{
+				if((c.getY() + c.getHeight() > ob.getY()) && (c.getY() < ob.getY() + ob.getHeight()) && (c.getX() - 7 + c.getWidth() < ob.getX()) && (c.getX() - 7 + c.getWidth() > ob.getX() + ob.getWidth()))
+					li = -1;
+			}
+			if(li>0)
+			{
+				c.moveLeft();
+				if(xx < 0 && (Menu.frame.getWidth() * .2 - xx) > c.getX())
+					xx = xx + 7;
+			}
+			li = 1;
+		}
 		if (keys.contains(KeyEvent.VK_W))
 			c.jump();
 		if (keys.contains(KeyEvent.VK_S))

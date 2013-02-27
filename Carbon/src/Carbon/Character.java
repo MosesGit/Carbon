@@ -6,20 +6,33 @@ import javax.swing.*;
  
 public class Character
 {
-	private int width, height, x, y, wx, wy, mx, my, health, maxHealth, score, space, r, money;
+	private int width, height, bWidth, bHeight, x, y, wx, wy, mx, my, health, maxHealth, score, space, r, money;
 	private double xDifference, yDifference, angle;
 	private Rectangle rect;
 	private Weapon weap;
 	private Image still, bg;
-	private String name, weapon;
+	private String name;
 	private boolean fired, reload;
-		
+	
+	//Amount to offset weapon image by so it lines up with the hand
+	private int offX, pX, rX, sX, sgX, aX, snX;
+	private int offY, pY, rY, sY, sgY, aY, snY;
+	
+	//Distance from player to point of gun
+	private int disX, pistolX, revolverX, smgX, shotgunX, assaultX, sniperX;
+	private int disY, pistolY, revolverY, smgY, shotgunY, assaultY, sniperY;
+	
+	//Weapons
+	private Weapon pistol, revolver, smg, shotgun, assault, sniper;
+	
 	public Character()
 	{
 		still = new ImageIcon("assets/graphics/Character.png").getImage();
-		bg = new ImageIcon("assets/graphics/Background.png").getImage();
+		bg = new ImageIcon("assets/graphics/Background 2.png").getImage();
 		width = still.getWidth(null);
 		height = still.getHeight(null);
+		bWidth = bg.getWidth(null);
+		bHeight = bg.getHeight(null);
 		x = 100 - width;
 		y = 500 - height;
 		wx = 0;
@@ -38,9 +51,21 @@ public class Character
 		rect = new Rectangle(x, y, 40, height);
 		fired = false;
 		reload = false;
-		weap = new Weapon(x + 100, y + 40, 100, 10, 100);
-		weapon = "pistol";
-		//width += weap.getWidth();
+		pX = 93;
+		pY = 42;
+		rX = 92;
+		rY = 41;
+		sX = 85;
+		sY = 37;
+		sgX = 90;
+		sgY = 40;
+		aX = 60;
+		aY = 34;
+		snX = 56;
+		snY = 31;
+		offX = pX;
+		offY = pY;
+		weap = new Weapon(x + offX, y + offY, 100, 10, 100, "Pistol");
 	}
 	
 	//Movement and location methods
@@ -87,8 +112,7 @@ public class Character
 		if (y + height > Menu.frame.getHeight())
 			y = Menu.frame.getHeight() - height;
 		rect.setLocation(x + 48, y);
-		if (weapon.equals("pistol"))
-			weap.setLocation(x + 90, y + 40);
+		weap.setLocation(x + offX, y + offY);
 		wx = weap.getOffsetX();
 		wy = weap.getOffsetY();
 	}
@@ -101,6 +125,14 @@ public class Character
 	public int getHeight()
 	{
 		return height;
+	}
+	public int getBWidth()
+	{
+		return bWidth;
+	}
+	public int getBHeight()
+	{
+		return bHeight;
 	}
 	public int getX()
 	{
@@ -162,6 +194,62 @@ public class Character
 	{
 		return reload;
 	}
+	public int getOffX()
+	{
+		return offX;
+	}
+	public int getOffY()
+	{
+		return offY;
+	}
+	public int getPX()
+	{
+		return pX;
+	}
+	public int getPY()
+	{
+		return pY;
+	}
+	public int getRX()
+	{
+		return rX;
+	}
+	public int getRY()
+	{
+		return rY;
+	}
+	public int getSX()
+	{
+		return sX;
+	}
+	public int getSY()
+	{
+		return sY;
+	}
+	public int getSGX()
+	{
+		return sgX;
+	}
+	public int getSGY()
+	{
+		return sgY;
+	}
+	public int getAX()
+	{
+		return aX;
+	}
+	public int getAY()
+	{
+		return aY;
+	}
+	public int getSNX()
+	{
+		return snX;
+	}
+	public int getSNY()
+	{
+		return snY;
+	}
 	
 	//Set methods
 	public void setMX(int n)
@@ -188,10 +276,9 @@ public class Character
 	{
 		space = n;
 	}
-	public void setWeapon(Weapon w, String s)
+	public void setWeapon(Weapon w)
 	{
 		weap = w;
-		weapon = s;
 	}
 	public void setFired(boolean b)
 	{
@@ -200,6 +287,14 @@ public class Character
 	public void setReload(boolean b)
 	{
 		reload = b;
+	}
+	public void setOffX(int x)
+	{
+		offX = x;
+	}
+	public void setOffY(int y)
+	{
+		offY = y;
 	}
 	//Other mutator methods
 	public void takeDamage(int n)
@@ -232,7 +327,10 @@ public class Character
 	//Draw methods
 	public void draw(Graphics g)
 	{
-		g.setColor(Color.WHITE);
+		//Clear color
+		g.setColor(new Color(0, 0, 0, 0));
+		//White rectangle for testing
+		//g.setColor(Color.WHITE);
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
 		g.drawImage(still, x, y, null);
 	}

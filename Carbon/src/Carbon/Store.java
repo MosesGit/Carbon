@@ -215,11 +215,13 @@ public class Store
 		{
 			if (e.getSource() == button1)
 			{
-				JOptionPane.showMessageDialog(Menu.frame, "Under Development.");
+				Menu.panel.c.setWeapon(new Weapon(Menu.panel.c.getX() + Menu.panel.c.getRX(),
+						Menu.panel.c.getY() + Menu.panel.c.getRY(), 200, 15, 5, "Revolver"));
 			}
 			else if (e.getSource() == button2)
 			{
-				JOptionPane.showMessageDialog(Menu.frame, "Under Development.");
+				Menu.panel.c.setWeapon(new Weapon(Menu.panel.c.getX() + Menu.panel.c.getSX(),
+						Menu.panel.c.getY() + Menu.panel.c.getSY(), 200, 15, 5, "SMG"));
 			}
 			else if (e.getSource() == button3)
 				JOptionPane.showMessageDialog(Menu.frame, "Under Development.");

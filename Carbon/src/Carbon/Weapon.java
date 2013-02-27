@@ -7,17 +7,18 @@ public class Weapon
 {
 	private int x, y, offsetX, offsetY, width, height, ammo, clips, damage;
 	private double angle;
+	private String name;
 	private Image wep, muzzle;
 	private Color col;
 	private Rectangle rect;
 	
-	public Weapon(int x, int y, int a, int c, int d)
+	public Weapon(int x, int y, int a, int c, int d, String s)
 	{
 		this.x = x;
 		this.y = y;
 		offsetX = 30;
 		offsetY = 2;
-		wep = new ImageIcon("assets/graphics/Pistol.png").getImage();
+		wep = new ImageIcon("assets/graphics/" + s + ".png").getImage();
 		width = wep.getWidth(null);
 		height = wep.getHeight(null);
 		ammo = a;
@@ -25,6 +26,7 @@ public class Weapon
 		damage = d;
 		angle = 0;
 		col = Color.BLACK;
+		name = s;
 		rect = new Rectangle();
 	}
 	
@@ -62,6 +64,10 @@ public class Weapon
 	public int getAmmo()
 	{
 		return ammo;
+	}
+	public String getName()
+	{
+		return name;
 	}
 	
 	//Weapon methods

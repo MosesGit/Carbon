@@ -63,9 +63,15 @@ public class Character
 		aY = 34;
 		snX = 56;
 		snY = 31;
+		pistol = new Weapon(x + pX, y + pY, 100, 10, 10, "Pistol");
+		revolver = new Weapon(x + rX, y + rY, 150, 6, 20, "Revolver");
+		smg = new Weapon(x + sX, y + sY, 200, 6, 5, "SMG");
+		shotgun = new Weapon(x + sgX, y + sgY, 75, 10, 10, "Shotgun");
+		assault = new Weapon(x + aX, y + aY, 500, 10, 25, "Assault Rifle");
+		sniper = new Weapon(x + snX, y + snY, 50, 10, 100, "Sniper Rifle");
+		weap = pistol;
 		offX = pX;
 		offY = pY;
-		weap = new Weapon(x + offX, y + offY, 100, 10, 100, "Pistol");
 	}
 	
 	//Movement and location methods
@@ -107,8 +113,8 @@ public class Character
 			x = 0;
 		if (y < 0)
 			y = 0;
-		if (x + width > Menu.frame.getWidth())
-			x = Menu.frame.getWidth() - width;
+		if(x + width > bWidth)
+			x = bWidth - width;
 		if (y + height > Menu.frame.getHeight())
 			y = Menu.frame.getHeight() - height;
 		rect.setLocation(x + 48, y);
@@ -249,6 +255,30 @@ public class Character
 	public int getSNY()
 	{
 		return snY;
+	}
+	public Weapon getPistol()
+	{
+		return pistol;
+	}
+	public Weapon getRevolver()
+	{
+		return revolver;
+	}
+	public Weapon getSMG()
+	{
+		return smg;
+	}
+	public Weapon getShotgun()
+	{
+		return shotgun;
+	}
+	public Weapon getAssault()
+	{
+		return assault;
+	}
+	public Weapon getSniper()
+	{
+		return sniper;
 	}
 	
 	//Set methods

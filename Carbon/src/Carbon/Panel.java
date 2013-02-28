@@ -44,9 +44,9 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		ob1 = new Obstacle(100, 100);
 		ob2 = new Obstacle(100, c.getY() - ob1.getHeight());
 		ob3 = new Obstacle(100, c.getY() + c.getHeight());
-		ob4 = new Obstacle(200, c.getY() - ob3.getHeight());
+		ob4 = new Obstacle(200, c.getY() - ob1.getHeight());
 		ob5 = new Obstacle(200, c.getY() + c.getHeight());
-		ob6 = new Obstacle(400, c.getY() - ob5.getHeight());
+		ob6 = new Obstacle(400, c.getY() - ob1.getHeight());
 		ob7 = new Obstacle(400, c.getY() + c.getHeight());
 		obstacles.add(ob1);
 		obstacles.add(ob2);
@@ -72,8 +72,6 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		paintBullet(bg);
 		paintObstacle(bg);
 		g.drawImage(bi, xx, yy, this);
-		
-		g.drawImage(bi, 0, 0, this);
 		repaint();
 	}
 	
@@ -132,12 +130,13 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		
 		if (keys.contains(KeyEvent.VK_D))
 		{
-			for(Obstacle ob:obstacles)
+			for (Obstacle ob:obstacles)
 			{
-				if((c.getY() + c.getHeight() > ob.getY()) && (c.getY() < ob.getY() + ob.getHeight()) && (c.getX() + 7 + c.getWidth() > ob.getX()) && (c.getX() + 7 + c.getWidth() < ob.getX() + ob.getWidth()))
+				if (c.getY() + c.getHeight() > ob.getY() && c.getY() < ob.getY() + ob.getHeight() &&
+						(c.getX() + 7 + c.getWidth() > ob.getX() && c.getX() + 7 + c.getWidth() < ob.getX() + ob.getWidth()))
 					ri = -1;
 			}
-			if( ri>0)
+			if (ri > 0)
 			{
 				c.moveRight();
 				if((xx * -1) < k - Menu.frame.getWidth() && Menu.frame.getWidth() * .5 - xx < c.getX())
@@ -147,15 +146,15 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		}
 		if (keys.contains(KeyEvent.VK_A))
 		{
-			for(Obstacle ob:obstacles)
+			for (Obstacle ob:obstacles)
 			{
-				if((c.getY() + c.getHeight() > ob.getY()) && (c.getY() < ob.getY() + ob.getHeight()) && (c.getX() - 7 + c.getWidth() < ob.getX()) && (c.getX() - 7 + c.getWidth() > ob.getX() + ob.getWidth()))
+				if (c.getY() + c.getHeight() > ob.getY() && c.getY() < ob.getY() + ob.getHeight() && (c.getX() - 7 + c.getWidth() < ob.getX() && c.getX() - 7 + c.getWidth() > ob.getX() + ob.getWidth()))
 					li = -1;
 			}
-			if(li>0)
+			if(li > 0)
 			{
 				c.moveLeft();
-				if(xx < 0 && (Menu.frame.getWidth() * .2 - xx) > c.getX())
+				if (xx < 0 && (Menu.frame.getWidth() * .2 - xx) > c.getX())
 					xx = xx + 7;
 			}
 			li = 1;

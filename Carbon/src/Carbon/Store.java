@@ -215,20 +215,34 @@ public class Store
 		{
 			if (e.getSource() == button1)
 			{
-				Menu.panel.c.setWeapon(new Weapon(Menu.panel.c.getX() + Menu.panel.c.getRX(),
-						Menu.panel.c.getY() + Menu.panel.c.getRY(), 200, 15, 5, "Revolver"));
+				Menu.panel.c.setWeapon(Menu.panel.c.getRevolver());
+				Menu.panel.c.setOffX(Menu.panel.c.getRX());
+				Menu.panel.c.setOffY(Menu.panel.c.getRY());
 			}
 			else if (e.getSource() == button2)
 			{
-				Menu.panel.c.setWeapon(new Weapon(Menu.panel.c.getX() + Menu.panel.c.getSX(),
-						Menu.panel.c.getY() + Menu.panel.c.getSY(), 200, 15, 5, "SMG"));
+				Menu.panel.c.setWeapon(Menu.panel.c.getSMG());
+				Menu.panel.c.setOffX(Menu.panel.c.getSX());
+				Menu.panel.c.setOffY(Menu.panel.c.getSY());
 			}
 			else if (e.getSource() == button3)
-				JOptionPane.showMessageDialog(Menu.frame, "Under Development.");
+			{
+				Menu.panel.c.setWeapon(Menu.panel.c.getShotgun());
+				Menu.panel.c.setOffX(Menu.panel.c.getSGX());
+				Menu.panel.c.setOffY(Menu.panel.c.getSGY());
+			}
 			else if (e.getSource() == button4)
-				JOptionPane.showMessageDialog(Menu.frame, "Under Development.");
+			{
+				Menu.panel.c.setWeapon(Menu.panel.c.getAssault());
+				Menu.panel.c.setOffX(Menu.panel.c.getAX());
+				Menu.panel.c.setOffY(Menu.panel.c.getAY());
+			}
 			else if (e.getSource() == button5)
-				JOptionPane.showMessageDialog(Menu.frame, "Under Development.");
+			{
+				Menu.panel.c.setWeapon(Menu.panel.c.getSniper());
+				Menu.panel.c.setOffX(Menu.panel.c.getSNX());
+				Menu.panel.c.setOffY(Menu.panel.c.getSNY());
+			}
 			else if (e.getSource() == button6)
 				JOptionPane.showMessageDialog(Menu.frame, "Under Development.");
 			else if (e.getSource() == button7)

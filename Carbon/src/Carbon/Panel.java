@@ -107,12 +107,12 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("FFF Galaxy", Font.PLAIN, 20));
-		g.drawString("Name: " + c.getName(), 50, 580);
-		g.drawString("HP: " + c.getHealth(), 50, 610);
-		g.drawString("Ammo: " + c.getWeapon().getAmmo(), 50, 640);
-		g.drawString("Score: " + c.getScore(), 50, 670);
-		g.drawString("Location: " + c.getMX() + " " + c.getMY(), 50, 700);
-		g.drawString("Money: "+ c.getMoney(), 50, 730);
+		g.drawString("Name: " + c.getName(), 50 - xx, 580);
+		g.drawString("HP: " + c.getHealth(), 50 - xx, 610);
+		g.drawString("Ammo: " + c.getWeapon().getAmmo(), 50 - xx, 640);
+		g.drawString("Score: " + c.getScore(), 50 - xx, 670);
+		g.drawString("Location: " + c.getMX() + " " + c.getMY(), 50 - xx, 700);
+		g.drawString("Money: "+ c.getMoney(), 50 - xx, 730);
 		
 		g.setColor(Color.WHITE);
 		g.fillRect(c.getX() + 41, c.getY() - 25, c.getMaxHealth() / 2, 5);
@@ -148,7 +148,8 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		{
 			for (Obstacle ob:obstacles)
 			{
-				if (c.getY() + c.getHeight() > ob.getY() && c.getY() < ob.getY() + ob.getHeight() && (c.getX() - 7 + c.getWidth() < ob.getX() && c.getX() - 7 + c.getWidth() > ob.getX() + ob.getWidth()))
+				if (c.getY() + c.getHeight() > ob.getY() && c.getY() < ob.getY() + ob.getHeight() &&
+						(c.getX() - 7 + c.getWidth() < ob.getX() && c.getX() - 7 + c.getWidth() > ob.getX() + ob.getWidth()))
 					li = -1;
 			}
 			if(li > 0)

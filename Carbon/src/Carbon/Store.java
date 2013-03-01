@@ -215,30 +215,35 @@ public class Store
 		{
 			if (e.getSource() == button1)
 			{
+				Menu.panel.c.updateWeapons();
 				Menu.panel.c.setWeapon(Menu.panel.c.getRevolver());
 				Menu.panel.c.setOffX(Menu.panel.c.getRX());
 				Menu.panel.c.setOffY(Menu.panel.c.getRY());
 			}
 			else if (e.getSource() == button2)
 			{
+				Menu.panel.c.updateWeapons();
 				Menu.panel.c.setWeapon(Menu.panel.c.getSMG());
 				Menu.panel.c.setOffX(Menu.panel.c.getSX());
 				Menu.panel.c.setOffY(Menu.panel.c.getSY());
 			}
 			else if (e.getSource() == button3)
 			{
+				Menu.panel.c.updateWeapons();
 				Menu.panel.c.setWeapon(Menu.panel.c.getShotgun());
 				Menu.panel.c.setOffX(Menu.panel.c.getSGX());
 				Menu.panel.c.setOffY(Menu.panel.c.getSGY());
 			}
 			else if (e.getSource() == button4)
 			{
+				Menu.panel.c.updateWeapons();
 				Menu.panel.c.setWeapon(Menu.panel.c.getAssault());
 				Menu.panel.c.setOffX(Menu.panel.c.getAX());
 				Menu.panel.c.setOffY(Menu.panel.c.getAY());
 			}
 			else if (e.getSource() == button5)
 			{
+				Menu.panel.c.updateWeapons();
 				Menu.panel.c.setWeapon(Menu.panel.c.getSniper());
 				Menu.panel.c.setOffX(Menu.panel.c.getSNX());
 				Menu.panel.c.setOffY(Menu.panel.c.getSNY());
@@ -255,6 +260,7 @@ public class Store
 				JOptionPane.showMessageDialog(Menu.frame, "Under Development.");
 			else if (e.getSource() == button11)
 			{
+				button11.setIcon(blank);
 				Menu.frame.getContentPane().removeAll();
 				Menu.frame.getContentPane().add(Menu.myPanel);
 				Menu.frame.getContentPane().revalidate(); 
@@ -264,6 +270,7 @@ public class Store
 			}
 			else if (e.getSource() == button12)
 			{
+				button12.setIcon(blank);
 				Menu.frame.getContentPane().removeAll();
 				Menu.frame.getContentPane().add(Menu.panel);
 				Menu.frame.getContentPane().revalidate(); 

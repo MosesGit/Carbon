@@ -341,6 +341,15 @@ public class Character
 	}
 	
 	//Weapon methods
+	public void updateWeapons()
+	{
+		pistol = new Weapon(x + pX, y + pY, 100, 10, 10, "Pistol");
+		revolver = new Weapon(x + rX, y + rY, 150, 6, 20, "Revolver");
+		smg = new Weapon(x + sX, y + sY, 200, 6, 5, "SMG");
+		shotgun = new Weapon(x + sgX, y + sgY, 75, 10, 10, "Shotgun");
+		assault = new Weapon(x + aX, y + aY, 500, 10, 25, "Assault Rifle");
+		sniper = new Weapon(x + snX, y + snY, 50, 10, 100, "Sniper Rifle");
+	}
 	public Bullet shoot()
 	{
 		xDifference = mx - wx;
@@ -357,10 +366,12 @@ public class Character
 	//Draw methods
 	public void draw(Graphics g)
 	{
+		g.setColor(new Color(100, 100, 100, 100));
+		g.fillRect(x, y, width, height);
 		//Clear color
-		g.setColor(new Color(0, 0, 0, 0));
+		//g.setColor(new Color(0, 0, 0, 0));
 		//White rectangle for testing
-		//g.setColor(Color.WHITE);
+		g.setColor(Color.WHITE);
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
 		g.drawImage(still, x, y, null);
 	}

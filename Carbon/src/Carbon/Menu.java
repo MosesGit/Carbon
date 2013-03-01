@@ -114,6 +114,7 @@ public class Menu extends JFrame
 						String n = JOptionPane.showInputDialog("Enter name: ");
 						if (n != null && n.length() > 0)
 						{
+							button1.setIcon(newgame);
 							panel.c = new Character();
 							panel.c.setName(n);
 							button2.setEnabled(true);
@@ -130,14 +131,13 @@ public class Menu extends JFrame
 						}
 					}
 					catch (NumberFormatException ex)
-					{
-						
-					}
+					{}
 				}
 			}
 			
 			else if (e.getSource() == button2)
 			{
+				button2.setIcon(continuegame);
 				frame.getContentPane().removeAll();
 				frame.getContentPane().add(panel);
 				frame.getContentPane().revalidate(); 

@@ -79,14 +79,12 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 	{
 			for(Bullet b:bullets)
 				b.draw(g);
-			update();
 	}
 	
 	public void paintObstacle(Graphics g)
 	{
 			for(Obstacle o:obstacles)
 				o.draw(g);
-			update();
 	}
 	
 	public void draw(Graphics g)
@@ -133,14 +131,14 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 			for (Obstacle ob:obstacles)
 			{
 				if (c.getY() + c.getHeight() > ob.getY() && c.getY() < ob.getY() + ob.getHeight() &&
-						(c.getX() + 7 + c.getWidth() > ob.getX() && c.getX() + 7 + c.getWidth() < ob.getX() + ob.getWidth()))
+						(c.getX() + c.getSpeed() + c.getWidth() > ob.getX() && c.getX() + c.getSpeed() + c.getWidth() < ob.getX() + ob.getWidth()))
 					ri = -1;
 			}
 			if (ri > 0)
 			{
 				c.moveRight();
 				if((xx * -1) < k - Menu.frame.getWidth() && Menu.frame.getWidth() * .5 - xx < c.getX())
-					xx = xx - 7;
+					xx = xx - c.getSpeed();
 			}
 			ri = 1;
 		}
@@ -149,14 +147,14 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 			for (Obstacle ob:obstacles)
 			{
 				if (c.getY() + c.getHeight() > ob.getY() && c.getY() < ob.getY() + ob.getHeight() &&
-						(c.getX() - 7 + c.getWidth() < ob.getX() && c.getX() - 7 + c.getWidth() > ob.getX() + ob.getWidth()))
+						(c.getX() - c.getSpeed() + c.getWidth() < ob.getX() && c.getX() - c.getSpeed() + c.getWidth() > ob.getX() + ob.getWidth()))
 					li = -1;
 			}
 			if(li > 0)
 			{
 				c.moveLeft();
 				if (xx < 0 && (Menu.frame.getWidth() * .2 - xx) > c.getX())
-					xx = xx + 7;
+					xx = xx + c.getSpeed();
 			}
 			li = 1;
 		}

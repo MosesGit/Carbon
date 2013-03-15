@@ -6,7 +6,7 @@ import javax.swing.*;
  
 public class Character
 {
-	private int width, height, bWidth, bHeight, x, y, wx, wy, mx, my, health, maxHealth, score, space, r, money;
+	private int width, height, bWidth, bHeight, x, y, wx, wy, mx, my, health, maxHealth, score, space, r, money, speed;
 	private double xDifference, yDifference, angle;
 	private Rectangle rect;
 	private Weapon weap;
@@ -45,6 +45,7 @@ public class Character
 		space = 0;
 		r = 0;
 		money = 1000;
+		speed = 10;
 		xDifference = 0;
 		yDifference = 0;
 		angle = 0;
@@ -83,7 +84,7 @@ public class Character
 	}
 	public void moveLeft()
 	{
-		moveLeft(7);
+		moveLeft(speed);
 	}
 	public void moveLeft(int dx)
 	{
@@ -92,7 +93,7 @@ public class Character
 	}
 	public void moveRight()
 	{
-		moveRight(7);
+		moveRight(speed);
 	}
 	public void moveRight(int dx)
 	{
@@ -179,6 +180,10 @@ public class Character
 	public int getMoney()
 	{
 		return money;
+	}
+	public int getSpeed()
+	{
+		return speed;
 	}
 	public String getName()
 	{

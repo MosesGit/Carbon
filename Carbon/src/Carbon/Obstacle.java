@@ -16,7 +16,7 @@ public class Obstacle
 		
 	public Obstacle()
 	{
-		im = new ImageIcon("assets/graphics/Object.png").getImage();
+		im = new ImageIcon("assets/graphics/Obstacle.png").getImage();
 		bg = new ImageIcon("assets/graphics/Background 2.png").getImage();
 		width = im.getWidth(null);
 		height = im.getHeight(null);
@@ -33,7 +33,7 @@ public class Obstacle
 	
 	public Obstacle(int x, int y)
 	{
-		im = new ImageIcon("assets/graphics/Object.png").getImage();
+		im = new ImageIcon("assets/graphics/Obstacle.png").getImage();
 		bg = new ImageIcon("assets/graphics/Background 2.png").getImage();
 		width = im.getWidth(null);
 		height = im.getHeight(null);
@@ -92,7 +92,7 @@ public class Obstacle
 	//Draw methods
 	public void draw(Graphics g)
 	{
-		g.setColor(new Color(0, 0, 0, 0));
+		g.setColor(Color.BLACK);
 		g.fillRect(x, y, width, height);
 		g.drawImage(im, x, y, null);
 	}

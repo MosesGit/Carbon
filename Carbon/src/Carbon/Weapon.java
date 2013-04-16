@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class Weapon
 {
-	private int x, y, offsetX, offsetY, width, height, ammo, clips, damage;
+	private int x, y, oX, oY, offsetX, offsetY, width, height, ammo, clips, damage;
 	private double angle;
 	private String name;
 	private Image wep, muzzle;
@@ -18,7 +18,8 @@ public class Weapon
 		this.y = y;
 		offsetX = 30;
 		offsetY = 2;
-		wep = new ImageIcon("assets/graphics/" + s + ".png").getImage();
+		name = s;
+		wep = new ImageIcon("assets/graphics/" + name + ".png").getImage();
 		width = wep.getWidth(null);
 		height = wep.getHeight(null);
 		ammo = a;
@@ -26,7 +27,6 @@ public class Weapon
 		damage = d;
 		angle = 0;
 		col = Color.BLACK;
-		name = s;
 		rect = new Rectangle();
 	}
 	
@@ -70,11 +70,21 @@ public class Weapon
 		return name;
 	}
 	
+	//Mutator methods
+	public void weaponUpdate(boolean l, String s, int o)
+	{
+		wep = new ImageIcon("assets/graphics/" + name + s + ".png").getImage();
+		if (l)
+		{
+			x += o;
+		}
+	}
+	
 	//Weapon methods
-	public Bullet shoot(double n, double a)
+	public Bullet shoot(double n, double a, int r, int l)
 	{
 		ammo--;
-		return new Bullet(x + offsetX, y + offsetY, n, a, 3, 6, col);
+		return new Bullet(x + offsetX, y + offsetY, n, a, 3, 6, col, 25, r, l);
 	}
 	public void reload()
 	{

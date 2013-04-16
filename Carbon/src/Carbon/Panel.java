@@ -10,21 +10,24 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 {
 	static Panel mainPanel;
 	static Character c;
-	static Enemy e;
+	static Enemy enemy;
+	Level l;
 	Image bi;
 	Graphics bg;
 	static ArrayList<Integer> keys;
+	static ArrayList<Level> levels;
 	static ArrayList<Bullet> bullets;
-	static ArrayList<Obstacle> obstacles;
-	static ArrayList<Enemy> enemies;
 	boolean redraw = true;
 	static int xx, yy, ll, k, ri, li;
+	static ArrayList<Enemy> enemies;
+	static ArrayList<Obstacle> obstacles;
+	
 	Obstacle ob1, ob2, ob3, ob4, ob5, ob6, ob7;
 	
 	public Panel()
 	{
 		c = new Character();
-		e = new Enemy();
+		enemy = new Enemy();
 		setFocusable(true);
 		requestFocus();
 		addKeyListener(this);
@@ -34,6 +37,7 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		bullets = new ArrayList<Bullet>();
 		obstacles = new ArrayList<Obstacle>();
 		enemies = new ArrayList<Enemy>();
+		enemies.add(enemy);
 		xx = 0;
 		yy = 0;
 		ll = 30;
@@ -41,20 +45,22 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		ri = 0;
 		li = 0;
 		
-		ob1 = new Obstacle(100, 100);
-		ob2 = new Obstacle(100, c.getY() - ob1.getHeight());
-		ob3 = new Obstacle(100, c.getY() + c.getHeight());
-		ob4 = new Obstacle(200, c.getY() - ob1.getHeight());
-		ob5 = new Obstacle(200, c.getY() + c.getHeight());
-		ob6 = new Obstacle(400, c.getY() - ob1.getHeight());
-		ob7 = new Obstacle(400, c.getY() + c.getHeight());
+		Obstacle ob1 = new Obstacle(100, 100);
 		obstacles.add(ob1);
+		Obstacle ob2 = new Obstacle(100, c.getY() - ob1.getHeight()-20-10);
 		obstacles.add(ob2);
+		Obstacle ob3 = new Obstacle(100+700, c.getY() + c.getHeight()-20-20);
+		Obstacle ob4 = new Obstacle(200, c.getY() - ob1.getHeight()-20-30);
+		Obstacle ob5 = new Obstacle(200+700, c.getY() + c.getHeight()-20-40);
+		Obstacle ob6 = new Obstacle(400, c.getY() - ob1.getHeight()-20-50);
+		Obstacle ob7 = new Obstacle(400+700, c.getY() + c.getHeight()-20-60);
+		
 		obstacles.add(ob3);
 		obstacles.add(ob4);
 		obstacles.add(ob5);
 		obstacles.add(ob6);
 		obstacles.add(ob7);
+		c.setObstacles(obstacles);
 	}
 	
 	public void paint(Graphics g)
@@ -71,26 +77,36 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		draw(bg);
 		paintBullet(bg);
 		paintObstacle(bg);
+		paintEnemy(bg);
 		g.drawImage(bi, xx, yy, this);
 		repaint();
 	}
 	
 	public void paintBullet(Graphics g)
 	{
-			for(Bullet b:bullets)
-				b.draw(g);
+		for (Bullet b:bullets)
+			b.draw(g);
 	}
-	
 	public void paintObstacle(Graphics g)
 	{
-			for(Obstacle o:obstacles)
-				o.draw(g);
+		for (Obstacle o:obstacles)
+			o.draw(g);
+	}
+	public void paintEnemy(Graphics g)
+	{
+		for (Enemy e:enemies)
+			e.draw(g);
 	}
 	
 	public void draw(Graphics g)
 	{
+		c.setObstacles(obstacles);
 		c.undraw(g);
+		c.stopR();
+		c.stopL();
 		update();
+		c.moveDown(3);
+		c.moveUp(18);
 		
 		if(redraw)
 		{
@@ -101,9 +117,8 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 		
 		c.getWeapon().draw(g);
 		c.draw(g);
-		e.draw(g);
 		
-		g.setColor(Color.BLACK);
+		g.setColor(Color.WHITE);
 		g.setFont(new Font("FFF Galaxy", Font.PLAIN, 20));
 		g.drawString("Name: " + c.getName(), 50 - xx, 580);
 		g.drawString("HP: " + c.getHealth(), 50 - xx, 610);
@@ -159,7 +174,12 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 			li = 1;
 		}
 		if (keys.contains(KeyEvent.VK_W))
-			c.jump();
+		{
+			c.addW();
+			c.setJumped(true);
+		}
+		if (!keys.contains(KeyEvent.VK_W))
+			c.setJumped(false);
 		if (keys.contains(KeyEvent.VK_S))
 			c.crouch();
 		if (keys.contains(KeyEvent.VK_R))
@@ -190,34 +210,61 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 			Menu.myPanel.requestFocusInWindow();
 		}
 		
-		if (c.getSpace() >= 1 && c.getWeapon().getAmmo() > 0 && c.getFired() == false)
+		if (c.getClick() >= 1 && c.getWeapon().getAmmo() > 0 && c.getFired() == false)
 		{
 			Bullet newBullet = c.shoot();
 			bullets.add(newBullet);
-			c.setSpace(0);
+			c.setClick(0);
 		}
 		if (c.getR() >= 1 && c.getReload() == false)
 		{
 			c.reload();
 			c.setR(0);
 		}
+		if (c.getW() >= 1 && c.getJumped() == false)
+		{
+			c.jump();
+			c.setW(0);
+		}
 		for (int i = 0; i < bullets.size(); i++)
 		{
 			bullets.get(i).move();
-			if ((bullets.get(i).getX() > Menu.frame.getWidth() + 10) || (bullets.get(i).getX() < 0))
+			if ((bullets.get(i).getX() > Menu.frame.getWidth() - xx) || (bullets.get(i).getX() < 0))
 			{
 				bullets.get(i).kill();
 				bullets.remove(i);
 				i--;
 				continue;
 			}
-			if ((bullets.get(i).getY() > Menu.frame.getHeight() + 10) || (bullets.get(i).getY() < 0))
+			if ((bullets.get(i).getY() > Menu.frame.getHeight()) || (bullets.get(i).getY() < 0))
 			{
 				bullets.get(i).kill();
 				bullets.remove(i);
 				i--;
 				continue;
 			}
+			for (int j = 0; j < enemies.size(); j++)
+			{
+				if ((bullets.get(i).getRect().intersects(enemies.get(j).getRect())))
+				{
+					enemies.get(j).takeDamage(25);
+					bullets.get(i).kill();
+					bullets.remove(i);
+					i--;
+					continue;
+				}
+			}
+		}
+		for (int j = 0; j < enemies.size(); j++)
+		{
+			enemies.get(j).move();
+			if (enemies.get(j).getHealth() <= 0)
+			{
+				//enemies.get(j).kill();
+				enemies.remove(j);
+				System.out.println("Test.");
+			}
+			
 		}
 	}
 	
@@ -240,7 +287,7 @@ public class Panel extends JPanel implements KeyListener, MouseListener, MouseMo
 	}
 	public void mousePressed(MouseEvent e)
 	{
-		c.addSpace();
+		c.addClick();
 		c.setFired(true);
 	}
 	public void mouseReleased(MouseEvent e)

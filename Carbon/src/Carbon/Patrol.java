@@ -3,14 +3,14 @@ package Carbon;
 import java.awt.*;
 import javax.swing.*;
 
-public class Enemy
+public class Patrol
 {
 	private int width, height, x, y, health, ammo;
 	private Rectangle rect;
 	private Color col;
 	private Image still;
 	
-	public Enemy()
+	public Patrol()
 	{
 		still = new ImageIcon("assets/graphics/Enemy.png").getImage();
 		width = still.getWidth(null);
@@ -32,9 +32,9 @@ public class Enemy
 	
 	public void move()
 	{
-		if (x < Menu.panel.c.getX())
+		if (x - Menu.panel.c.getX() > 750 && x - Menu.panel.c.getX() < 1000)
 			moveLeft();
-		else
+		else if (x - Menu.panel.c.getX() < 250 && Menu.panel.c.getX() > 500)
 			moveRight();
 	}
 	
@@ -77,13 +77,12 @@ public class Enemy
 		if(y < 0)
 			y = 0;
 		if(x + width > Menu.frame.getWidth())
-			x = Menu.panel.k - width;
+			x = Menu.frame.getWidth() - width;
 		if(y + height > Menu.frame.getHeight())
 			y = Menu.frame.getHeight() - height;
 		rect.setLocation(x, y);
 	}
 	
-	//Get methods
 	public int getX()
 	{
 		return x;
@@ -103,23 +102,10 @@ public class Enemy
 	{
 		return height;
 	}
-	public int getHealth()
-	{
-		return health;
-	}
+	
 	public Image getImage()
 	{
 		return still;
-	}
-	public Rectangle getRect()
-	{
-		return rect;
-	}
-	
-	//Mutator methods
-	public void takeDamage(int d)
-	{
-		health -= d;
 	}
 	
 	public Bullet shoot(int n, int a, int r, int l)

@@ -2,21 +2,30 @@ package Carbon;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
  
 public class Character
 {
-	private int width, height, bWidth, bHeight, x, y, wx, wy, mx, my, health, maxHealth, score, space, r, money, speed;
+	private int width, height, bWidth, bHeight, x, y, wx, wy, mx, my;
+	private int health, maxHealth, score, click, w, r, money, speed;
+	//jt = check if in jump, jl = time of jump, ft, ftt = related to jump 
+	private int jt, jl, ft, ftt, down, ri, le;
 	private double xDifference, yDifference, angle;
 	private Rectangle rect;
 	private Weapon weap;
-	private Image still, bg;
+	private Image image, right, left, moveRight, moveLeft, jump, bg;
 	private String name;
-	private boolean fired, reload;
+	//mR = moving right, mL = moving left
+	private boolean mR, mL, fired, jumped, reload;
+	private ArrayList<Obstacle> obstacles;
 	
 	//Amount to offset weapon image by so it lines up with the hand
 	private int offX, pX, rX, sX, sgX, aX, snX;
 	private int offY, pY, rY, sY, sgY, aY, snY;
+	private int offXL, pXL, rXL, sXL, sgXL, aXL, snXL;
+	private int offYL, pYL, rYL, sYL, sgYL, aYL, snYL;
 	
 	//Distance from player to point of gun
 	private int disX, pistolX, revolverX, smgX, shotgunX, assaultX, sniperX;
@@ -27,10 +36,14 @@ public class Character
 	
 	public Character()
 	{
-		still = new ImageIcon("assets/graphics/Character.png").getImage();
+		right = new ImageIcon("assets/graphics/Character.png").getImage();
+		left = new ImageIcon("assets/graphics/Character 2.png").getImage();
+		moveRight = new ImageIcon("assets/graphics/Character.png").getImage();
+		moveLeft = new ImageIcon("assets/graphics/Character 2.png").getImage();
+		image = right;
 		bg = new ImageIcon("assets/graphics/Background 2.png").getImage();
-		width = still.getWidth(null);
-		height = still.getHeight(null);
+		width = image.getWidth(null);
+		height = image.getHeight(null);
 		bWidth = bg.getWidth(null);
 		bHeight = bg.getHeight(null);
 		x = 100 - width;
@@ -42,7 +55,8 @@ public class Character
 		health = 75;
 		maxHealth = 100;
 		score = 0;
-		space = 0;
+		click = 0;
+		w = 0;
 		r = 0;
 		money = 1000;
 		speed = 10;
@@ -51,6 +65,7 @@ public class Character
 		angle = 0;
 		rect = new Rectangle(x, y, 40, height);
 		fired = false;
+		jumped = false;
 		reload = false;
 		pX = 93;
 		pY = 42;
@@ -64,6 +79,18 @@ public class Character
 		aY = 34;
 		snX = 56;
 		snY = 31;
+		pXL = -75;
+		pYL = -42;
+		rXL = -92;
+		rYL = -41;
+		sXL = -85;
+		sYL = -37;
+		sgXL = -90;
+		sgYL = -40;
+		aXL = -60;
+		aYL = -34;
+		snXL = -56;
+		snYL = -31;
 		pistol = new Weapon(x + pX, y + pY, 100, 10, 10, "Pistol");
 		revolver = new Weapon(x + rX, y + rY, 150, 6, 20, "Revolver");
 		smg = new Weapon(x + sX, y + sY, 200, 6, 5, "SMG");
@@ -73,6 +100,19 @@ public class Character
 		weap = pistol;
 		offX = pX;
 		offY = pY;
+		jt = 0;
+		jl = 0;
+		ft = 0;
+		ftt = 0;
+		down = 0;
+		ri = 0;
+		le = 0;
+		obstacles = new ArrayList<Obstacle>();
+	}
+	
+	public void setObstacles(ArrayList<Obstacle> obs)
+	{
+		obstacles = obs;
 	}
 	
 	//Movement and location methods
@@ -85,24 +125,134 @@ public class Character
 	public void moveLeft()
 	{
 		moveLeft(speed);
+		weaponLeft();
+		mR = false;
+		mL = true;
+		le = 1;
 	}
 	public void moveLeft(int dx)
 	{
-		x -= dx;
+		for (Obstacle ob:obstacles)
+		{
+			if (((getY() + getHeight() > ob.getY() && getY()<ob.getY()) || (getY() < ob.getY() + ob.getHeight() &&
+					getY() + getHeight() > ob.getY() + ob.getHeight()) || (getY()>ob.getY() && getY() + getHeight()<ob.getY() + ob.getHeight())) &&
+					getX() - dx < ob.getX() + ob.getWidth() && getX() - dx > ob.getX())
+			{
+				le = -1;
+				x -= getX() - ob.getX() - ob.getWidth();
+			}
+		}
+		if (le >= 0)
+			x -= dx;
 		keepInBounds();
+		le = 1;
 	}
 	public void moveRight()
 	{
 		moveRight(speed);
+		weaponRight();
+		mL = false;
+		mR = true;
+		ri = 1;
 	}
 	public void moveRight(int dx)
 	{
-		x += dx;
+		for (Obstacle ob:obstacles)
+		{
+			if (((getY() + getHeight() > ob.getY() && getY() < ob.getY()) || (getY()< ob.getY() + ob.getHeight()
+					&& getY() + getHeight() > ob.getY() + ob.getHeight()) || (getY()>ob.getY() && getY() + getHeight() < ob.getY() + ob.getHeight()))
+					&& getX() + dx+getWidth() > ob.getX() && getX() + dx+getWidth() < ob.getX() + ob.getWidth())
+			{
+				ri=-1;
+				x+= ob.getX() - getX() - getWidth();
+			}
+		}
+		if(ri >= 0)
+			x += dx;
 		keepInBounds();
+		ri = 1;
+	}
+	public void moveUp(int dy)
+	{
+		int up = 1;
+		int DTU = 0;
+		int kb = 0;
+		for (Obstacle ob:obstacles)
+		{
+			if (getY() - dy > ob.getY()  && getY() - dy < ob.getY() + ob.getHeight() && (getX() + getWidth() > ob.getX()
+					&& getX()  < ob.getX() + ob.getWidth()))
+			{
+				up = 0;
+				//System.out.println(ob.getWidth());
+				if(kb == 0)
+					DTU = getY() - (ob.getY() + ob.getHeight());
+				if(DTU > getY() - (ob.getY() + ob.getHeight()))
+					DTU= getY() - (ob.getY() + ob.getHeight());
+				kb++;
+			}
+		}
+		if (jt == 1)
+		{
+			jl++;
+			if(jl < 10 && up == 1)
+			{
+				y -= dy;
+				//if( jl>6)
+				//y+= dy/3;
+			}
+			else 
+			{
+				jt=0;
+				y-= DTU;
+			}
+		}
+		if (jl >= 10)
+			jt = 0;
+		if(jt == 0)
+			jl = 0;
+		keepInBounds();
+	}
+	public void moveDown(int dy)
+	{
+		down = 1;
+		int DTD = 0;
+		int ka = 0;
+		for (Obstacle ob:obstacles)
+		{
+			if (500 - height < y + dy + ft || (getY() + getHeight() + dy + ft < ob.getY()+ ob.getHeight() && getY() + getHeight() + dy + ft > ob.getY() &&
+					(getX() + getWidth() > ob.getX() && getX() < ob.getX() + ob.getWidth())))
+			{
+				down = 0;
+				if(ka == 0)
+					DTD = getY() - (ob.getY() + ob.getHeight());
+				if(DTD > getY() - (ob.getY() + ob.getHeight()))
+					DTD = getY() - (ob.getY() + ob.getHeight());
+				ka++;
+			}
+		}
+		if(down == 1)
+		{
+			y += dy + ft;
+			ftt++;
+			if(ft <= 20 && ftt % 2 == 0)
+				ft++;
+		}
+		if(down == 0)
+			ft = 0;
+		keepInBounds();
+	}
+	public void stopR()
+	{
+		ri = 0;
+	}
+	public void stopL()
+	{
+		le = 0;
 	}
 	public void jump()
 	{
-		
+		if (down == 0)
+			jt = 1;
 	}
 	public void crouch()
 	{
@@ -118,20 +268,31 @@ public class Character
 			x = bWidth - width;
 		if (y + height > Menu.frame.getHeight())
 			y = Menu.frame.getHeight() - height;
+		if (mR)
+			image = moveRight;
+		//Toolkit.getDefaultToolkit().createImage("e:/java/spin.gif");
+		if (mL)
+			image = moveLeft;
 		rect.setLocation(x + 48, y);
 		weap.setLocation(x + offX, y + offY);
 		wx = weap.getOffsetX();
 		wy = weap.getOffsetY();
+		mR = false;
+		mL = false;
 	}
 	
 	//Get methods
 	public int getWidth()
 	{
-		return width;
+		return rect.width;
 	}
 	public int getHeight()
 	{
-		return height;
+		return rect.height;
+	}
+	public int getRectWidth()
+	{
+		return width;
 	}
 	public int getBWidth()
 	{
@@ -143,7 +304,7 @@ public class Character
 	}
 	public int getX()
 	{
-		return x;
+		return x + 48;
 	}
 	public int getY()
 	{
@@ -169,13 +330,17 @@ public class Character
 	{
 		return score;
 	}
-	public int getSpace()
+	public int getClick()
 	{
-		return space;
+		return click;
 	}
 	public int getR()
 	{
 		return r;
+	}
+	public int getW()
+	{
+		return w;
 	}
 	public int getMoney()
 	{
@@ -195,7 +360,7 @@ public class Character
 	}
 	public Image getImage()
 	{
-		return still;
+		return image;
 	}
 	public boolean getFired()
 	{
@@ -204,6 +369,10 @@ public class Character
 	public boolean getReload()
 	{
 		return reload;
+	}
+	public boolean getJumped()
+	{
+		return jumped;
 	}
 	public int getOffX()
 	{
@@ -307,9 +476,13 @@ public class Character
 	{
 		r = n;
 	}
-	public void setSpace(int n)
+	public void setW(int n)
 	{
-		space = n;
+		w = n;
+	}
+	public void setClick(int n)
+	{
+		click = n;
 	}
 	public void setWeapon(Weapon w)
 	{
@@ -322,6 +495,10 @@ public class Character
 	public void setReload(boolean b)
 	{
 		reload = b;
+	}
+	public void setJumped(boolean b)
+	{
+		jumped = b;
 	}
 	public void setOffX(int x)
 	{
@@ -336,13 +513,17 @@ public class Character
 	{
 		health -= n;
 	}
+	public void addClick()
+	{
+		click++;
+	}
 	public void addR()
 	{
 		r++;
 	}
-	public void addSpace()
+	public void addW()
 	{
-		space++;
+		w++;
 	}
 	
 	//Weapon methods
@@ -355,30 +536,63 @@ public class Character
 		assault = new Weapon(x + aX, y + aY, 500, 10, 25, "Assault Rifle");
 		sniper = new Weapon(x + snX, y + snY, 50, 10, 100, "Sniper Rifle");
 	}
+	public void weaponRight()
+	{
+		if (weap.getName().equals("Pistol"))
+			weap.weaponUpdate(false, "", pX);
+		if (weap.getName().equals("Revolver"))
+			weap.weaponUpdate(false, "", rX);
+		if (weap.getName().equals("SMG"))
+			weap.weaponUpdate(false, "", sX);
+		if (weap.getName().equals("Shotgun"))
+			weap.weaponUpdate(false, "", sgX);
+		if (weap.getName().equals("Assault Rifle"))
+			weap.weaponUpdate(false, "", aX);
+		if (weap.getName().equals("Sniper Rifle"))
+			weap.weaponUpdate(false, "", snX);
+	}
+	public void weaponLeft()
+	{
+		if (weap.getName().equals("Pistol"))
+			weap.weaponUpdate(true, " 2", pXL);
+		if (weap.getName().equals("Revolver"))
+			weap.weaponUpdate(true, " 2", rXL);
+		if (weap.getName().equals("SMG"))
+			weap.weaponUpdate(true, " 2", sXL);
+		if (weap.getName().equals("Shotgun"))
+			weap.weaponUpdate(true, " 2", sgXL);
+		if (weap.getName().equals("Assault Rifle"))
+			weap.weaponUpdate(true, " 2", aXL);
+		if (weap.getName().equals("Sniper Rifle"))
+			weap.weaponUpdate(true, " 2", snXL);
+	}
 	public Bullet shoot()
 	{
-		xDifference = mx - wx;
-		yDifference = my - wy;
-		angle = Math.atan2(xDifference, yDifference);
-		return(weap.shoot(10, angle));
+		xDifference = mx - wx - 170;
+		yDifference = y - my;
+		angle = Math.atan2(yDifference, xDifference);
+		if (angle > Math.PI/2)
+			angle = Math.PI/2;
+		if (angle < -1 * Math.PI/2)
+			angle = Math.PI/-2;
+		return(weap.shoot(10, -angle, ri, le));
 	}
 	public void reload()
 	{
 		weap.reload();
-		space = 0;
 	}
 	
 	//Draw methods
 	public void draw(Graphics g)
 	{
-		g.setColor(new Color(100, 100, 100, 100));
-		g.fillRect(x, y, width, height);
 		//Clear color
 		//g.setColor(new Color(0, 0, 0, 0));
+		g.setColor(new Color(100, 100, 100, 100));
+		g.fillRect(x, y, width, height);
 		//White rectangle for testing
 		g.setColor(Color.WHITE);
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
-		g.drawImage(still, x, y, null);
+		g.drawImage(image, x, y, null);
 	}
 	public void undraw(Graphics g)
 	{
